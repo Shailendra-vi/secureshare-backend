@@ -49,7 +49,7 @@ public class Action {
         byte[] fileData = doc.getFileData();
         long size = doc.getFileSize();
             
-        File tempFile = new File("src\\"+doc.getTitle());
+        File tempFile = new File(doc.getTitle());
         tempFile.createNewFile();
         FileOutputStream fos = new FileOutputStream(tempFile);
         fos.write(fileData);
@@ -57,7 +57,6 @@ public class Action {
 //        System.out.print(tempFile.getAbsolutePath());
         boolean ret=false;
         if(size<=100000000) {
-            
             ret= encryptInAction(tempFile, fileType, 10, keyAES, keyDES);
         }
         else if(size>100000000 && size<=1000000000) {
@@ -112,7 +111,7 @@ public class Action {
 		byte[] fileData = doc.getFileData();
         long size = doc.getFileSize();
             
-        File tempFile = new File("src\\"+doc.getTitle());
+        File tempFile = new File(doc.getTitle());
         tempFile.createNewFile();
         FileOutputStream fos = new FileOutputStream(tempFile);
         fos.write(fileData);
