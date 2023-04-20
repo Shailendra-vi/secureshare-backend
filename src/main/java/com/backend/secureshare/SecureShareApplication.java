@@ -9,4 +9,6 @@ public class SecureShareApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SecureShareApplication.class, args);
 	}
+	
 }
+
