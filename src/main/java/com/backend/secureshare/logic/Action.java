@@ -25,7 +25,7 @@ public class Action {
                 encryptedChunkFile.createNewFile();
                 File chunkFiles= new File(tempFile.getAbsolutePath()+"Original_File_Splits\\split" + i + fileType);
                 if(i%2==0) {
-                    CryptoAES.encrypt(keyAES,"maxEncryption", chunkFiles, encryptedChunkFile);
+                    CryptoAES.encrypt(keyAES, chunkFiles, encryptedChunkFile);
                 }
                 else{
                     CryptoDES.encrypt(keyDES, chunkFiles, encryptedChunkFile);
@@ -45,11 +45,13 @@ public class Action {
     public static boolean encrypt(Document doc, String password, String fileType) throws Exception {
         String keyAES = KeyGen.getMd5AES(password);
         String keyDES = KeyGen.getMd5DES(password);
-            
+        
+        System.out.println(keyAES+"\n"+keyDES);
+        
         byte[] fileData = doc.getFileData();
         long size = doc.getFileSize();
             
-        File tempFile = new File(doc.getTitle());
+        File tempFile = new File("src//"+doc.getTitle());
         tempFile.createNewFile();
         FileOutputStream fos = new FileOutputStream(tempFile);
         fos.write(fileData);
@@ -83,18 +85,18 @@ public class Action {
         dir.mkdir();
         for(int i=1;i<=noOfSplit;i++) {
             try {
-                File encryptedChunkFile = new File(tempFile.getAbsolutePath()+"_Decrypted_Chunks_Splits\\split" + i + fileType);
-                encryptedChunkFile.createNewFile();
+                File decryptedChunkFile = new File(tempFile.getAbsolutePath()+"_Decrypted_Chunks_Splits\\split" + i + fileType);
+                decryptedChunkFile.createNewFile();
                 File chunkFiles= new File(tempFile.getAbsolutePath()+"Original_File_Splits\\split" + i + fileType);
                 if(i%2==0) {
-                    CryptoAES.decrypt(keyAES,"maxEncryption", chunkFiles, encryptedChunkFile);
+                    CryptoAES.decrypt(keyAES, chunkFiles, decryptedChunkFile);
                 }
                 else{
-                    CryptoDES.decrypt(keyDES, chunkFiles, encryptedChunkFile);
+                    CryptoDES.decrypt(keyDES, chunkFiles, decryptedChunkFile);
                 }
             }
-            catch(CryptoException ex) {
-                System.out.println(ex.getMessage());
+            catch(Exception ex) {
+//                System.out.println(ex.getMessage());
                 ex.printStackTrace();
                 return false;
             }
@@ -106,12 +108,13 @@ public class Action {
 	public static boolean decrypt(Document doc, String password, String fileType) throws Exception {
 		String keyAES = KeyGen.getMd5AES(password);
 		String keyDES = KeyGen.getMd5DES(password);
-//		System.out.print(keyAES+"\n"+keyDES);
+		
+		System.out.println(keyAES+"\n"+keyDES);
 		
 		byte[] fileData = doc.getFileData();
         long size = doc.getFileSize();
             
-        File tempFile = new File(doc.getTitle());
+        File tempFile = new File("src//"+doc.getTitle());
         tempFile.createNewFile();
         FileOutputStream fos = new FileOutputStream(tempFile);
         fos.write(fileData);
@@ -181,7 +184,7 @@ class Chunks {
     //Join File//
     static void joinFiles(File[] files, File inputFile, String fileType) throws Exception {
         int maxReadBufferSize = 8 * 1024;
-        System.out.println(inputFile.getName().substring(0,inputFile.getName().length()-4));
+//        System.out.println(inputFile.getName().substring(0,inputFile.getName().length()-4));
         
         File inputFileParent = inputFile.getParentFile();
         String outputFilePath = inputFileParent.getAbsolutePath() +"\\"+inputFile.getName().substring(0,inputFile.getName().length()-4)+ "-Output" + fileType;
